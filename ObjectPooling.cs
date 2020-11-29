@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace OSK
 {
+    // initialized with CreatePooling and turned off with GameObject.SetActive(false)
     public class ObjectPooling : Singleton<ObjectPooling>
     {
         public static Dictionary<string, List<MonoBehaviour>> ObjPooling =
