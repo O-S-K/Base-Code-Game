@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 namespace OSK
 {
@@ -10,14 +11,15 @@ namespace OSK
     {
         public Text tipsText;
         public Image progressPic;
+        //public TextMeshProUGUI percentLoading;
 
-        // public DialogueConfig loadtips;
         AsyncOperation async;
         Vector2 progrespicSize;
 
         float m_delay;
         bool m_startLoad;
 
+        // public DialogueConfig loadtips;
         //  void Awake()
         // {
         // 	ztipsText.text = TextConfig.GetIns().GetText(loadtips.dialogues[UnityEngine.Random.Range(0, loadtips.dialogues.Length)]);
@@ -48,6 +50,7 @@ namespace OSK
             float num = m_delay * 50f;
             if (async != null) num += async.progress * 50f;
             progressPic.fillAmount = num / 100f;
+            //percentLoading.text = "LOADING " + percent.ToString("0") + "%";
         }
     }
 }
