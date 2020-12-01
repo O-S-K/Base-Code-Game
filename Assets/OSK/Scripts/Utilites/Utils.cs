@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
+using System;
 
 public static class Utils
 {
@@ -44,7 +45,7 @@ public static class Utils
     }
     public static string ConvertMoneyToString(long money)
     {
-        if (money>=1000000000)
+        if (money >= 1000000000)
         {
             return (money / 1000000000).ToString() + "B";
         }
@@ -66,7 +67,7 @@ public static class Utils
         return timeDiffernce.Seconds;
     }
 
-    public static string CutString(string text,int MaxLength)
+    public static string CutString(string text, int MaxLength)
     {
         if (text == null) return "";
         string[] SplitText = text.Split(' ');
@@ -106,4 +107,4 @@ public static class Utils
     }
 
     #endregion
- }
+}
