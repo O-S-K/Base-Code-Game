@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-
 namespace OSK
 {
     // initialized with CreatePooling and turned off with GameObject.SetActive(false)
@@ -19,9 +18,9 @@ namespace OSK
             if (!ObjPooling.ContainsKey(type))
             {
                 listObjects = new List<MonoBehaviour>
-            {
-                Instantiate(_obj)
-            };
+                {
+                    Instantiate(_obj)
+                };
                 ObjPooling.Add(type, listObjects);
                 Obj obj = (Obj)listObjects[0];
                 return obj;
