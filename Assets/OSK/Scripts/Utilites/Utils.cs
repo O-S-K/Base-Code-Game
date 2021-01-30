@@ -18,19 +18,16 @@ public static class Utils
             list[n] = value;
         }
     }
-
     static System.Random random = new System.Random();
     public static double GetRandomNumber(double minimum, double maximum)
     {
         return random.NextDouble() * (maximum - minimum) + minimum;
     }
-
     public static float GetRandomNumber(float minimum, float maximum)
     {
         return (float)random.NextDouble() * (maximum - minimum) + minimum;
     }
-
-    private static int lastRandomNumber;
+    static int lastRandomNumber;
     public static int GenerateRandomNumber(int min, int max)
     {
         int result = Random.Range(min, max);
@@ -105,6 +102,24 @@ public static class Utils
         }
         return time;
     }
+
+    #region Set Bool
+    public static void SetBool(string key, bool state)
+    {
+        PlayerPrefs.SetInt(key, state ? 1 : 0);
+    }
+    public static bool GetBool(string key)
+    {
+        return PlayerPrefs.GetInt(key) == 1;
+    }
+
+    // public static bool isBool
+    // {
+    //   get{ return PlayerPrefs.GetInt("key") == 1;}
+    //   set{ PlayerPrefs.SetInt("key", value ? 1 : 0);}
+    // }
+    
+    #endregion
 
     #endregion
 }
