@@ -43,7 +43,7 @@ public class SmartEditor : EditorWindow
     string filterFolderName;
     string filterSpecial;
 
-    [MenuItem("Electronic Brain/Smart Library/Smart Assembler")]
+    [MenuItem("Tools/Electronic Brain/Smart Library/Smart Assembler")]
     public static void ShowWindow()
     {
         GetWindow<SmartEditor>(false, "Smart Assembler", true);
