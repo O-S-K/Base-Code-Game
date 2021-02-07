@@ -57,6 +57,23 @@ public static class Utils
         return money.ToString();
     }
 
+    public static string FormatSeconds(float elapsed)
+    {
+        //#1
+        int d = (int)(elapsed * 100.0f);
+        int minutes = d / (60 * 100);
+        int seconds = (d % (60 * 100)) / 100;
+        int hundredths = d % 100;
+        return string.Format("{0:00}:{1:00}.{2:00}", minutes, seconds, hundredths);
+
+        //#2
+        //timer += Time.deltaTime;
+        //string hours = Mathf.Floor(timer / 3600).ToString("00");
+        //string minutes = Mathf.Floor(timer / 60).ToString("00");
+        //string seconds = (timer % 60).ToString("00");
+        //txtTimeSuvival.text = string.Format("{0}:{1}:{2}", hours, minutes, seconds);
+    }
+
     public static int GetSecondElalsed(DateTime prevDate)
     {
         DateTime now = DateTime.Now;
