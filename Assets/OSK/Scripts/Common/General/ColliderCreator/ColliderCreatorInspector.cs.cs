@@ -11,8 +11,8 @@ public class ColliderCreatorInspector : UnityEditor.Editor
 
     public void OnEnable()
     {
-        generateContent = new GUIContent(" Generate Colliders", EditorGUIUtility.IconContent("d_Refresh").image);
-        clearAllContent = new GUIContent(" Clear Colliders", EditorGUIUtility.IconContent("d_Grid.EraserTool").image);
+        generateContent = new GUIContent(" Generate Colliders", EditorGUIUtility.IconContent("d_CreateAddNew").image);	
+        clearAllContent = new GUIContent(" Clear Colliders", EditorGUIUtility.IconContent("P4_DeletedLocal").image);
     }
 
     public override void OnInspectorGUI()
