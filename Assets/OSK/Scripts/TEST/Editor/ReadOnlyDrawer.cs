@@ -1,4 +1,4 @@
-﻿/// ReadOnlyAttribute.cs (MUST NOT be in Editor folder)
+﻿/// ReadOnlyDrawer.cs (MUST be in Editor folder)
 
 #if UNITY_EDITOR
 using UnityEngine;
