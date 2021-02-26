@@ -11,39 +11,55 @@ namespace OSK
             X, Y, Z, XY, XZ, YZ, XYZ
         }
 
-        public FollowAxis followAxis;
         public Transform target;
-        [Range(0, .1F)]
-        public float smoothFollow;
+        public FollowAxis followAxis;
+
+        [Header("Smooth")]
+        [Range(0F, 1F)]
+        public float smoothFollowX;
+        [Range(0F, 1F)]
+        public float smoothFollowY;
+        [Range(0F, 1F)]
+        public float smoothFollowZ;
         protected Vector3 offset;
         protected Vector3 targetPosition;
+
 
         protected virtual void Start()
         {
             offset = transform.position - target.position;
         }
 
-        protected virtual void FollowToTarget(float bonusX, float bonusY, float bonusZ)
+
+        protected virtual void FollowToTarget(float offsetX, float offsetY, float offsetZ)
         {
             if (target != null)
             {
                 switch (followAxis)
                 {
-                    case FollowAxis.X:   FollowInAxis(target.position.x    + bonusX,   transform.position.y + bonusY,   transform.position.z + bonusZ);  break;
-                    case FollowAxis.Y:   FollowInAxis(transform.position.x + bonusX,   target.position.y    + bonusY,   transform.position.z + bonusZ);  break;
-                    case FollowAxis.Z:   FollowInAxis(transform.position.x + bonusX,   transform.position.y + bonusY,   target.position.z    + bonusZ);  break;
-                    case FollowAxis.XY:  FollowInAxis(target.position.x    + bonusX,   target.position.y    + bonusY,   transform.position.z + bonusZ);  break;
-                    case FollowAxis.XZ:  FollowInAxis(target.position.x    + bonusX,   transform.position.y + bonusY,   target.position.z    + bonusZ);  break;
-                    case FollowAxis.YZ:  FollowInAxis(transform.position.x + bonusX,   target.position.y    + bonusY,   target.position.z    + bonusZ);  break;
-                    case FollowAxis.XYZ: FollowInAxis(target.position.x    + bonusX,   target.position.y    + bonusY,   target.position.z    + bonusZ);  break;
+                    case FollowAxis.X: FollowInAxis(target.position.x + offsetX, transform.position.y + offsetY, transform.position.z + offsetZ); break;
+                    case FollowAxis.Y: FollowInAxis(transform.position.x + offsetX, target.position.y + offsetY, transform.position.z + offsetZ); break;
+                    case FollowAxis.Z: FollowInAxis(transform.position.x + offsetX, transform.position.y + offsetY, target.position.z + offsetZ); break;
+                    case FollowAxis.XY: FollowInAxis(target.position.x + offsetX, target.position.y + offsetY, transform.position.z + offsetZ); break;
+                    case FollowAxis.XZ: FollowInAxis(target.position.x + offsetX, transform.position.y + offsetY, target.position.z + offsetZ); break;
+                    case FollowAxis.YZ: FollowInAxis(transform.position.x + offsetX, target.position.y + offsetY, target.position.z + offsetZ); break;
+                    case FollowAxis.XYZ: FollowInAxis(target.position.x + offsetX, target.position.y + offsetY, target.position.z + offsetZ); break;
                 }
-                transform.position = Vector3.Lerp(transform.position, targetPosition, smoothFollow);
+
+                transform.position = SmoothFollow(targetPosition.x, targetPosition.y, transform.position.z, smoothFollowX);
+                transform.position = SmoothFollow(transform.position.x, targetPosition.y, transform.position.z, smoothFollowY);
+                transform.position = SmoothFollow(transform.position.x, targetPosition.y, targetPosition.z, smoothFollowZ);
             }
         }
 
-        protected void FollowInAxis(float _x, float _y, float _z)
+        protected Vector3 SmoothFollow(float _x, float _y, float _z, float _smooth)
         {
-            targetPosition = new Vector3(_x, _y, _z);
+            return Vector3.Lerp(transform.position, new Vector3(_x, _y, _z), _smooth);
+        }
+
+        protected Vector3 FollowInAxis(float _x, float _y, float _z)
+        {
+            return targetPosition = new Vector3(_x, _y, _z);
         }
     }
 }
