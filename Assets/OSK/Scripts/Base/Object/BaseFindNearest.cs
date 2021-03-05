@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace OSK
 {
-    public abstract class  BaseFindNearest : MonoBehaviour
+    public abstract class BaseFindNearest : MonoBehaviour
     {
         public Transform Pivot;
 
@@ -16,27 +16,32 @@ namespace OSK
         public Collider[] targetsInViewRadius;
         protected Transform nearestObject;
 
-        protected virtual void FindVisibleTargets(Transform _transOrigin,Transform _rot, float _fovDistanceCheck, float _positionYStartCheckRaycast, float _timeSmooth)
+        protected virtual void FindVisibleTargets(Transform _transOrigin, Transform _rot, float _fovDistanceCheck, float _positionYStartCheckRaycast, float _timeSmooth)
         {
             visibleTargets.Clear();
             float minimumDistance = _fovDistanceCheck;
+            // REQUIRED: We must assure each enemy has only one <Collider>, or another customization is needed 
             targetsInViewRadius = Physics.OverlapSphere(transform.position, minimumDistance, targetMask);
 
+            // Loop through found enemy colliders
             foreach (var collider in targetsInViewRadius)
             {
                 float distance = Vector3.Distance(_transOrigin.position, collider.transform.position);
+                // Bubble search
                 if (distance < minimumDistance)
                 {
-                    minimumDistance = distance;
-                    nearestObject = collider.transform;
-                }
+                    var dirToTarget = collider.transform.position - _transOrigin.position;
+                    var posOrigin = new Vector3(_transOrigin.position.x, _transOrigin.position.y + _positionYStartCheckRaycast, _transOrigin.position.z);
 
-                var dirToTarget = nearestObject.position - _transOrigin.position;
-                var posOrigin = new Vector3(_transOrigin.position.x, _transOrigin.position.y + _positionYStartCheckRaycast, _transOrigin.position.z);
+                    // NOTE: Only change landmarks once we assured that the new landmark is attackable
+                    // Raycast is used to check enemies available for straight shooting attack type
+                    if (!Physics.Raycast(posOrigin, dirToTarget, distance, blockMask))
+                    {
+                        visibleTargets.Add(nearestObject);
 
-                if (!Physics.Raycast(posOrigin, dirToTarget, distance, blockMask))
-                {
-                    visibleTargets.Add(nearestObject);
+                        minimumDistance = distance;
+                        nearestObject = collider.transform;
+                    }
                 }
             }
 
