@@ -1,11 +1,10 @@
 ﻿#if UNITY_EDITOR
-using System;
 using UnityEditor;
 using UnityEngine;
+using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
 using Object = UnityEngine.Object;
-using System.Reflection;
-using System.Linq;
 
 
 public class ReplacAllMaterials : EditorWindow
@@ -19,7 +18,7 @@ public class ReplacAllMaterials : EditorWindow
     }
 
     public OPTIONS option = OPTIONS.TypeMaterialStandard;
-    public List<GameObject> listGameObjects = new List<GameObject>();
+    public List<GameObject> listGameObjects;
     public Material material;
     Vector2 scrollViewAll;
 
@@ -34,6 +33,7 @@ public class ReplacAllMaterials : EditorWindow
     {
         titleContent = new GUIContent("Replace Materials");
         serializedObject = new SerializedObject(this);
+        listGameObjects = new List<GameObject>();
     }
 
     void OnSelectionChange() => Repaint();
@@ -42,7 +42,8 @@ public class ReplacAllMaterials : EditorWindow
     {
         EditorGUIUtility.labelWidth = 100F;
         GUILayout.Space(10);
-        scrollViewAll = GUILayout.BeginScrollView(scrollViewAll, false, true, GUIStyle.none, GUI.skin.verticalScrollbar);
+        scrollViewAll = GUILayout.BeginScrollView(
+            scrollViewAll, false, true, GUIStyle.none, GUI.skin.verticalScrollbar);
         option = (OPTIONS)EditorGUILayout.EnumPopup("OPTION ", option);
         MaterialReplace();
         GUILayout.Space(20);
@@ -52,9 +53,11 @@ public class ReplacAllMaterials : EditorWindow
 
     void MaterialReplace()
     {
-        var style = new GUIStyle(GUI.skin.label);
-        style.alignment = TextAnchor.MiddleCenter;
-        style.fontStyle = FontStyle.Bold;
+        var style = new GUIStyle(GUI.skin.label)
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fontStyle = FontStyle.Bold
+        };
         GUILayout.Space(10);
         GUILayout.Label("MATERIALS REPLACE", style, GUILayout.ExpandWidth(true));
         GUILayout.Space(10);
@@ -74,9 +77,11 @@ public class ReplacAllMaterials : EditorWindow
 
     void AllMaterials()
     {
-        var style = new GUIStyle(GUI.skin.label);
-        style.alignment = TextAnchor.MiddleCenter;
-        style.fontStyle = FontStyle.Bold;
+        var style = new GUIStyle(GUI.skin.label)
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fontStyle = FontStyle.Bold
+        };
 
         GUILayout.Label("DRAG TO MODEL REPACE MATERIALS", style, GUILayout.ExpandWidth(true));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("listGameObjects"), true);
@@ -84,7 +89,12 @@ public class ReplacAllMaterials : EditorWindow
 
         if (GUILayout.Button("Apply"))
         {
-            
+            if (listGameObjects.Count < 0) return;
+            for (int i = 0; i < listGameObjects.Count; i++)
+            {
+                SetDummy(listGameObjects[i], material);
+                EditorUtility.SetDirty(listGameObjects[i]);
+            }
         }
         if (GUILayout.Button("Undo"))
         {
@@ -103,6 +113,26 @@ public class ReplacAllMaterials : EditorWindow
         GUILayout.BeginVertical(); GUILayout.Space(10f);
         serializedObject.ApplyModifiedProperties();
         GUILayout.EndVertical(); GUILayout.Space(6f);
+    }
+
+    private static void SetDummy(Object obj, Material mat)
+    {
+        string assetPath = AssetDatabase.GetAssetPath(obj);
+        var modelImporter = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+        modelImporter.importMaterials = true;
+        modelImporter.materialLocation = ModelImporterMaterialLocation.InPrefab;
+        modelImporter.materialName = ModelImporterMaterialName.BasedOnModelNameAndMaterialName;
+        modelImporter.materialSearch = ModelImporterMaterialSearch.Local;
+
+        var sourceMaterials = typeof(ModelImporter)
+            .GetProperty("sourceMaterials", BindingFlags.NonPublic | BindingFlags.Instance)?
+            .GetValue(modelImporter) as AssetImporter.SourceAssetIdentifier[];
+
+        foreach (var identifier in sourceMaterials ?? Enumerable.Empty<AssetImporter.SourceAssetIdentifier>())
+        {
+            modelImporter.AddRemap(identifier, mat);
+        }
+        modelImporter.SaveAndReimport();
     }
 
     //void OnPreprocessModel()

@@ -15,7 +15,7 @@ public enum OPTIONS
     fog = 4
 }
 
-public class EditColorInObject : EditorWindow
+public class ToolColors : EditorWindow
 {
     #region Variable
     public OPTIONS opiton;
@@ -53,26 +53,28 @@ public class EditColorInObject : EditorWindow
     [MenuItem("Tools/Tool Edit Color Object")]
     public static void ShowWindows()
     {
-        GetWindow<EditColorInObject>("Tool Color");
+        GetWindow<ToolColors>("Tool Color");
     }
     void OnEnable()
     {
         titleContent = new GUIContent("Edit Color In Object");
         serializedObject = new SerializedObject(this);
     }
+
     void OnSelectionChange() => Repaint();
+
     void OnGUI()
     {
         EditorGUIUtility.labelWidth = 100F;
-
         GUILayout.Space(10);
         opiton = (OPTIONS)EditorGUILayout.EnumPopup("OPTION ", opiton);
         GUILayout.Space(20);
-
-        scrollViewAll = GUILayout.BeginScrollView(scrollViewAll, false, true, GUIStyle.none, GUI.skin.verticalScrollbar);
+        scrollViewAll = GUILayout.BeginScrollView(
+            scrollViewAll, false, true, GUIStyle.none, GUI.skin.verticalScrollbar);
         ChooseOption(opiton);
         GUILayout.EndScrollView();
     }
+
     void ChooseOption(OPTIONS option)
     {
         switch (option)
@@ -102,9 +104,11 @@ public class EditColorInObject : EditorWindow
     }
     public void BaseSetupObject(string nameLable, string nameFindProperty = null, Action action = null)
     {
-        var style = new GUIStyle(GUI.skin.label);
-        style.alignment = TextAnchor.MiddleCenter;
-        style.fontStyle = FontStyle.Bold;
+        var style = new GUIStyle(GUI.skin.label)
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fontStyle = FontStyle.Bold
+        };
 
         GUILayout.Label(nameLable, style, GUILayout.ExpandWidth(true));
         scrollChildCamera = GUILayout.BeginScrollView(scrollChildCamera, false, true, GUIStyle.none, GUI.skin.verticalScrollbar);
@@ -122,19 +126,16 @@ public class EditColorInObject : EditorWindow
     }
     public void BaseSetupObject(string nameLable, Action action = null)
     {
-        var style = new GUIStyle(GUI.skin.label);
-        style.alignment = TextAnchor.MiddleCenter;
-        style.fontStyle = FontStyle.Bold;
+        var style = new GUIStyle(GUI.skin.label)
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fontStyle = FontStyle.Bold
+        };
 
         GUILayout.Label(nameLable, style, GUILayout.ExpandWidth(true));
         scrollChildCamera = GUILayout.BeginScrollView(scrollChildCamera, false, true, GUIStyle.none, GUI.skin.verticalScrollbar);
         GUILayout.EndScrollView();
-
-        if (action != null)
-        {
-            action();
-        }
-
+        action?.Invoke();
         GUILayout.BeginVertical(); GUILayout.Space(10f);
         serializedObject.ApplyModifiedProperties();
         GUILayout.EndVertical(); GUILayout.Space(6f);
@@ -224,13 +225,14 @@ public class EditColorInObject : EditorWindow
             if (GUILayout.Button("Apply") || boolFog)
             {
                 RenderSettings.fog = true;
+                RenderSettings.fogMode = FogMode.Linear;
                 RenderSettings.fogStartDistance = fogStartDis;
                 RenderSettings.fogEndDistance = fogEndDis;
                 RenderSettings.fogColor = fogColor;
             }
             if (GUILayout.Button("Undo"))
             {
-                // Undo.PerformUndo();
+                Undo.PerformUndo();
             }
             if (GUILayout.Button("Delete"))
             {
