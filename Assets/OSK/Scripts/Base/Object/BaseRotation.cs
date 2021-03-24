@@ -14,7 +14,8 @@ namespace OSK
         public SpinAxis spinningAxis;
         public float timePerRound;
         public bool clockwise = true;
-        
+        Tween tween;
+
         protected virtual void Start()
         {
             if (!isRotate) return;
@@ -37,8 +38,11 @@ namespace OSK
             Vector3 currentRotation = pivotRotate.rotation.eulerAngles;
             var angleDown     = new Vector3(currentRotation.x + axisX, currentRotation.y + axisY, currentRotation.z + axisZ);
             var angleOpposite = new Vector3(currentRotation.x - axisX, currentRotation.y - axisY, currentRotation.z - axisZ);
-            pivotRotate.DORotate(clockwise ? angleDown : angleOpposite, timePerRound, RotateMode.FastBeyond360)
+            tween = pivotRotate.DORotate(clockwise ? angleDown : angleOpposite, timePerRound, RotateMode.FastBeyond360)
                        .SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart);
         }
+
+        public void ResumeRotate() => tween.Play();
+        public void StopRotate() => tween.Pause();
     }
 }
