@@ -18,15 +18,17 @@ namespace OSK
 
         protected virtual void Start()
         {
-            if (pivotScale == null) pivotScale = this.transform;
+            if (pivotScale == null) 
+                pivotScale = this.transform;
 
-            if (typeScale == TypeScale.Single)
+            switch(typeScale)
             {
-                ScaleBodySingle(valueScale, timeScale, ease);
-            }
-            if (typeScale == TypeScale.Loop)
-            {
-                ScaleBodyLoop(valueScale, timeScale, ease);
+                case TypeScale.Single:
+                    ScaleBodySingle(valueScale, timeScale, ease);
+                    break;
+                case TypeScale.Loop:
+                    ScaleBodyLoop(valueScale, timeScale, ease);
+                    break;
             }
         }
 

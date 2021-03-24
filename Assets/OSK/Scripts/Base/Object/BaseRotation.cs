@@ -7,9 +7,7 @@ namespace OSK
     {
         public enum SpinAxis
         {
-            x,y, z,
-            xy, xz, yz,
-            xyz
+            X, Y, Z, XY, XZ, YZ, XYZ
         };
         public Transform pivotRotate;
         public bool isRotate = false;
@@ -20,15 +18,18 @@ namespace OSK
         protected virtual void Start()
         {
             if (!isRotate) return;
+            if (pivotRotate == null)
+                pivotRotate = transform;
+
             switch (spinningAxis)
             {
-                case SpinAxis.x:    RotateBody(360F, 0F, 0F);       break;
-                case SpinAxis.y:    RotateBody(0F, 360F, 0F);       break;
-                case SpinAxis.z:    RotateBody(0F, 0F, 360F);       break;
-                case SpinAxis.xy:   RotateBody(360F, 360F, 0F);     break;
-                case SpinAxis.xz:   RotateBody(360F, 0F, 360F);     break;
-                case SpinAxis.yz:   RotateBody(0F, 360F, 360F);     break;
-                case SpinAxis.xyz:  RotateBody(360F, 360F, 360F);   break;
+                case SpinAxis.X:    RotateBody(360F, 0F, 0F);       break;
+                case SpinAxis.Y:    RotateBody(0F, 360F, 0F);       break;
+                case SpinAxis.Z:    RotateBody(0F, 0F, 360F);       break;
+                case SpinAxis.XY:   RotateBody(360F, 360F, 0F);     break;
+                case SpinAxis.XZ:   RotateBody(360F, 0F, 360F);     break;
+                case SpinAxis.YZ:   RotateBody(0F, 360F, 360F);     break;
+                case SpinAxis.XYZ:  RotateBody(360F, 360F, 360F);   break;
             }
         }
         public void RotateBody(float axisX, float axisY, float axisZ)
