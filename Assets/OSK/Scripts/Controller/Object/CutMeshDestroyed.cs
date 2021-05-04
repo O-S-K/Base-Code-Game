@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+// Put it on a game object with a mesh filter and renderer. Make sure to have read/write enabled on fbx import
+
 public class CutMeshDestroyed : MonoBehaviour
 {
     private bool edgeSet = false;
