@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using OSK;
 public class CameraFollow : BaseFollow
 {
     public Transform playerTarget;
