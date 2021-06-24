@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+// need to inherit BaseFollow to be able to use
+using UnityEngine;
 using OSK;
+
 public class CameraFollow : BaseFollow
 {
     public Transform playerTarget;
