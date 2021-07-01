@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CameraWindown : MonoBehaviour
+public class CameraWindow : MonoBehaviour
 {
     public enum FollowAxis
     {
