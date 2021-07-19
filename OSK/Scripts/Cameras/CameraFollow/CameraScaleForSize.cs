@@ -40,6 +40,26 @@ public class CameraScaleForSize : MonoBehaviour
         }
     }
 
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        switch (fixAxisCamera)
+        {
+            case FixAxisCamera.Horizontal:
+                {
+                    SetRatioCameraHorizontal();
+                    break;
+                }
+            case FixAxisCamera.Vertical:
+                {
+                    SetRatioCameraVertical();
+                    break;
+                }
+        }
+    }
+#endif
+
     public void SetRatioCameraHorizontal()
     {
         float num = (float)Screen.width / (float)Screen.height;
