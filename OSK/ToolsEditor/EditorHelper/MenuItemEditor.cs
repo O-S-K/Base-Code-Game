@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class ActionEditor : MonoBehaviour
+public class MenuItemEditor : MonoBehaviour
 {
     [MenuItem("Assets/Open with Photoshop")]
     private static void OpenPhotosshop()
