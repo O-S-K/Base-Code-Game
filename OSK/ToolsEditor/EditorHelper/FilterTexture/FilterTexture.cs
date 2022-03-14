@@ -12,7 +12,7 @@ public class FilterTexture : EditorWindow
     SerializedObject serializedObject;
     Vector2 scrollPos;
 
-    [MenuItem("Tools/Filter Texture")]
+    [MenuItem("Tools/Filter Textures And Remove Unused Textures")]
     public static void ShowWindow()
     {
         GetWindow(typeof(FilterTexture));
@@ -21,7 +21,7 @@ public class FilterTexture : EditorWindow
     void OnEnable()
     {
         m_Textures = new List<Texture2D>();
-        titleContent = new GUIContent("Filter Texture and Resize / 4");
+        titleContent = new GUIContent("Filter Textures");
         serializedObject = new SerializedObject(this);
     }
 
@@ -42,6 +42,7 @@ public class FilterTexture : EditorWindow
         GUILayout.Space(6f);
         GUILayout.BeginVertical(GUI.skin.box);
         GUILayout.Space(6f);
+
         if (Selection.activeObject != null)
         {
             AssetDatabase.TryGetGUIDAndLocalFileIdentifier(Selection.activeObject, out var guid, out long file);
@@ -76,6 +77,7 @@ public class FilterTexture : EditorWindow
                     File.Delete(AssetDatabase.GetAssetPath(v.Key));
                 }
             }
+            AssetDatabase.Refresh();
         }
 
         GUILayout.EndVertical();
