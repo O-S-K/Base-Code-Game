@@ -1,13 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
-using System.Threading;
-using System.Diagnostics;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+using System.Diagnostics; 
 
 public class MenuItemEditor : MonoBehaviour
 {
@@ -15,7 +10,7 @@ public class MenuItemEditor : MonoBehaviour
     private static void OpenPhotosshop()
     {
         Process photoViewer = new Process();
-        photoViewer.StartInfo.FileName = @"D:\Quyle\Pts\PhotoshopCS6Portable.exe";
+        photoViewer.StartInfo.FileName = @"D:\App Setup\Adobe Photoshop CC 2018\Photoshop";
         var inf = new FileInfo(AssetDatabase.GetAssetPath(Selection.activeObject));
         photoViewer.StartInfo.Arguments = inf.FullName;
         photoViewer.Start();
@@ -31,8 +26,23 @@ public class MenuItemEditor : MonoBehaviour
             EditorUtility.SetDirty(obj);
         }
 
+        AssetDatabase.Refresh();
         UnityEngine.Debug.Log($"<b><color=#ffa500ff>Removed {count} missing scripts</color></b>");
     }
+
+    [MenuItem("Tools/PushIndex+1")]
+    public static void ChangeNamePrefab()
+    { 
+        foreach (var obj in Selection.objects)
+        {
+            var Path = AssetDatabase.GetAssetPath(obj);
+            string namePrefab = obj.name.Split(' ')[0] + " " + (int.Parse(obj.name.Split(' ')[1]) + 1) + ".prefab";
+            var newPath = "Assets/Project/Resources/Levels/LevelSwap/" + namePrefab;
+            File.Move(Path, newPath);
+        }
+        AssetDatabase.Refresh();
+    }
+
 
     //[MenuItem("Tools/ExportScene Package")]
     //public static void BuildPackage()
