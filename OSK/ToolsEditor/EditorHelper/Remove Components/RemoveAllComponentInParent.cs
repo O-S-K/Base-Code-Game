@@ -3,19 +3,19 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(RemoveAllComponentInParent))]
-public class RemoveCollider : Editor
+public class RemoveComponent : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
         GUILayout.Space(20);
 
+        string lb = "Remove All Component";
         var style = new GUIStyle(GUI.skin.label)
         {
             alignment = TextAnchor.MiddleCenter,
             fontStyle = FontStyle.Bold
         };
-        string lb = "Remove All Component In Parent";
         GUILayout.Label(lb, style, GUILayout.ExpandWidth(true));
 
         var remove = (RemoveAllComponentInParent)target;
@@ -25,38 +25,45 @@ public class RemoveCollider : Editor
         GUILayout.Space(5F);
         if (GUILayout.Button("All Components Except Models"))
         {
-            remove.DestroyAllComponet();
+            remove.AllComponet();
         }
         if (GUILayout.Button("Gameobject no componets"))
         {
-            remove.DestroyObjectNoComponent();
+            remove.ObjectNoComponent();
         }
         if (GUILayout.Button("Scripts"))
         {
-            remove.DestroyScripts();
+            remove.Scripts();
         }
         if (GUILayout.Button("Rigidbodies"))
         {
-            remove.DestroyRigidbodys();
+            remove.Rigidbodys();
         }
         if (GUILayout.Button("Colliders"))
         {
-            remove.DestroyColliders();
+            remove.Colliders();
         }
 
         if (GUILayout.Button("AudioSources"))
         {
-            remove.DestroyAudioSource();
+            remove.AudioSource();
         }
         if (GUILayout.Button("Lights"))
         {
-            remove.DestroyLight();
+            remove.Light();
         }
         if (GUILayout.Button("Animations"))
         {
-            remove.DestroyAnimations();
+            remove.Animations();
         }
+
+        if (GUILayout.Button("Collider Ragdoll"))
+        {
+            remove.ObjectRagdoll();
+        }
+
         GUILayout.Space(15);
+
 
 
         if (GUILayout.Button("Undo"))
@@ -76,6 +83,7 @@ public class RemoveAllComponentInParent : MonoBehaviour
 
     // Component delete
     [Space]
+    private CharacterJoint[] characterJoints;
     private Collider[] colliders;
     private AudioSource[] audioSource;
     private Light[] lightPoint;
@@ -93,7 +101,7 @@ public class RemoveAllComponentInParent : MonoBehaviour
             transformParentRemove = this.transform;
         }
     }
-    public void DestroyScripts()
+    public void Scripts()
     {
         monoScript = transformParentRemove.GetComponentsInChildren<MonoBehaviour>();
         foreach (MonoBehaviour scripts in monoScript)
@@ -108,7 +116,7 @@ public class RemoveAllComponentInParent : MonoBehaviour
         }
         Debug.Log("Count: " + Count);
     }
-    public void DestroyAnimations()
+    public void Animations()
     {
         animations = transformParentRemove.GetComponentsInChildren<Animation>();
         foreach (Animation anim in animations)
@@ -120,7 +128,14 @@ public class RemoveAllComponentInParent : MonoBehaviour
         }
         Debug.Log("Count: " + Count);
     }
-    public void DestroyRigidbodys()
+
+    public void ObjectRagdoll()
+    {
+        Rigidbodys();
+        Colliders();
+        CharacterJoint();
+    }
+    public void Rigidbodys()
     {
         rigidbodies = transformParentRemove.GetComponentsInChildren<Rigidbody>();
         foreach (Rigidbody rigid in rigidbodies)
@@ -132,7 +147,7 @@ public class RemoveAllComponentInParent : MonoBehaviour
         }
         Debug.Log("Count: " + Count);
     }
-    public void DestroyColliders()
+    public void Colliders()
     {
         colliders = transformParentRemove.GetComponentsInChildren<Collider>();
         foreach (Collider collider in colliders)
@@ -144,7 +159,21 @@ public class RemoveAllComponentInParent : MonoBehaviour
         }
         Debug.Log("Count: " + Count);
     }
-    public void DestroyAudioSource()
+
+    public void CharacterJoint()
+    {
+        characterJoints = transformParentRemove.GetComponentsInChildren<CharacterJoint>();
+        foreach (CharacterJoint characterJoint in characterJoints)
+        {
+            Debug.Log("Name: " + characterJoint.name);
+            EditorUtility.SetDirty(characterJoint);
+            Undo.DestroyObjectImmediate(characterJoint);
+            Count++;
+        }
+        Debug.Log("Count: " + Count);
+    }
+
+    public void AudioSource()
     {
         audioSource = transformParentRemove.GetComponentsInChildren<AudioSource>();
         foreach (AudioSource audio in audioSource)
@@ -156,7 +185,7 @@ public class RemoveAllComponentInParent : MonoBehaviour
         }
         Debug.Log("Count: " + Count);
     }
-    public void DestroyLight()
+    public void Light()
     {
         lightPoint = transformParentRemove.GetComponentsInChildren<Light>();
         foreach (Light light in lightPoint)
@@ -168,7 +197,7 @@ public class RemoveAllComponentInParent : MonoBehaviour
         }
         Debug.Log("Count: " + Count);
     }
-    public void DestroyAllComponet()
+    public void AllComponet()
     {
         components = transformParentRemove.GetComponentsInChildren<Component>();
         foreach (Component componet in components)
@@ -185,7 +214,7 @@ public class RemoveAllComponentInParent : MonoBehaviour
         }
         Debug.Log("Count: " + Count);
     }
-    public void DestroyObjectNoComponent()
+    public void ObjectNoComponent()
     {
         objNoComponent = transformParentRemove.GetComponentsInChildren<Transform>();
         foreach (Component trans in objNoComponent)
