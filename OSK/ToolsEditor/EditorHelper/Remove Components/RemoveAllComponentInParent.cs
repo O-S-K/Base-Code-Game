@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 [CustomEditor(typeof(RemoveAllComponentInParent))]
 public class RemoveComponent : Editor
@@ -43,7 +44,6 @@ public class RemoveComponent : Editor
         {
             remove.Colliders();
         }
-
         if (GUILayout.Button("AudioSources"))
         {
             remove.AudioSource();
@@ -56,16 +56,16 @@ public class RemoveComponent : Editor
         {
             remove.Animations();
         }
-
         if (GUILayout.Button("Collider Ragdoll"))
         {
             remove.ObjectRagdoll();
         }
+        if (GUILayout.Button("Remove Missing Scripts"))
+        {
+            remove.RemoveMissingScriptsInObect();
+        }
 
         GUILayout.Space(15);
-
-
-
         if (GUILayout.Button("Undo"))
         {
             Debug.Log("-- Undo --");
@@ -229,6 +229,19 @@ public class RemoveAllComponentInParent : MonoBehaviour
             Count++;
         }
         Debug.Log("Count: " + Count);
+    }
+
+    public void RemoveMissingScriptsInObect()
+    {
+        var allObject = Resources.FindObjectsOfTypeAll<GameObject>();
+        int count = allObject.Sum(GameObjectUtility.RemoveMonoBehavioursWithMissingScript);
+        foreach (var obj in allObject)
+        {
+            EditorUtility.SetDirty(obj);
+        }
+
+        AssetDatabase.Refresh();
+        Debug.Log($"<b><color=#ffa500ff>Removed {count} missing scripts</color></b>");
     }
 }
 public static class HasComponentInObject
